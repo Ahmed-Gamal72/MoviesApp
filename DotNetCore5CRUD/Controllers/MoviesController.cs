@@ -40,14 +40,14 @@ namespace DotNetCore5CRUD.Controllers
             if (!ModelState.IsValid)
             {
                 model.Genres = await _context.Genres.OrderBy(m => m.Name).ToListAsync();
-                return View(model);
+                return View("MovieForm", model);
             }
             var files = Request.Form.Files;
             if (!files.Any())
             {
                 model.Genres = await _context.Genres.OrderBy(m => m.Name).ToListAsync();
                 ModelState.AddModelError("Poster", "Please select movie poster!");
-                return View(model);
+                return View("MovieForm", model);
             }
 
             var poster = files.FirstOrDefault();
@@ -56,14 +56,14 @@ namespace DotNetCore5CRUD.Controllers
             {
                 model.Genres = await _context.Genres.OrderBy(m => m.Name).ToListAsync();
                 ModelState.AddModelError("Poster", "Only .JPG, .PNG images are allowed!");
-                return View(model);
+                return View("MovieForm", model);
             }
 
             if (poster.Length>1048576)
             {
                 model.Genres = await _context.Genres.OrderBy(m => m.Name).ToListAsync();
                 ModelState.AddModelError("Poster", "Poster cannot be more than 1 MB!");
-                return View(model);
+                return View("MovieForm", model);
             }
 
             using var dataStream = new MemoryStream();
