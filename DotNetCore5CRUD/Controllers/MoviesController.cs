@@ -59,7 +59,7 @@ namespace DotNetCore5CRUD.Controllers
                 return View("MovieForm", model);
             }
 
-            if (poster.Length>1048576)
+            if (poster.Length > 1048576)
             {
                 model.Genres = await _context.Genres.OrderBy(m => m.Name).ToListAsync();
                 ModelState.AddModelError("Poster", "Poster cannot be more than 1 MB!");
@@ -74,8 +74,8 @@ namespace DotNetCore5CRUD.Controllers
                 GenreId = model.GenreId,
                 Year = model.Year,
                 Rate = model.Rate,
-                StoryLine=model.StoryLine,
-                Poster=dataStream.ToArray()
+                StoryLine = model.StoryLine,
+                Poster = dataStream.ToArray()
             };
 
             _context.Movies.Add(movies);
@@ -83,7 +83,7 @@ namespace DotNetCore5CRUD.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Edit (int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
                 return BadRequest();
@@ -91,9 +91,19 @@ namespace DotNetCore5CRUD.Controllers
 
             if (movie == null)
                 return NotFound();
+            var viewModel = new MovieFormViewModel
+            {
+                Id = movie.Id,
+                Title = movie.Title,
+                GenreId = movie.GenreId,
+                Year = movie.Year,
+                Rate = movie.Rate,
+                StoryLine = movie.StoryLine,
+                Poster = movie.Poster,
+                Genres = await _context.Genres.OrderBy(m => m.Name).ToListAsync()
+            };
+            return View("MovieForm", viewModel);
 
-            return View();
-                
         }
     }
 }
